@@ -1,18 +1,21 @@
 import React from "react";
 import ReactDom from 'react-dom'
 
-const name = 'Carlos Morera'
-//Build object
-const user ={
-    name : 'Carlos Morera',
-    age: 26,
-    country: 'Colombia'
-}
+//Define funtional Component
+const FruitTarjet = () => (
+    <div>
+        <hh3>Title</hh3>
+    <hr/>
+    <p>Description...</p>
+    </div>
+)
 
-function getInfo(user) {
-    return `Hi my name is ${user.name} and Im from ${user.country} `
-}
+const App = () =>(
+    <div>
+        <FruitTarjet/>
+        <FruitTarjet></FruitTarjet>
 
-const App = <h1>{getInfo(user)}</h1>
+    </div>
+)
 
-ReactDom.render(App,document.getElementById('root'))
+ReactDom.render(<App/>,document.getElementById('root'))
