@@ -1,14 +1,42 @@
 import React from "react";
-import ReactDom from 'react-dom'
+import ReactDOM from 'react-dom'
 
 class FruitTarjet extends React.Component {
     constructor() {
         super();
+
+        const METHODS = [
+            'agregar',
+            'quitar',
+            'limpiar'
+        ];
+
+        METHODS.forEach((method) => {
+            this[method] = this[method].bind(this)
+        })
+
         this.state = {
             cantidad: 0
         }
     }
 
+    agregar() {
+        this.setState({
+            cantidad: this.state.cantidad + 1
+        })
+    }
+
+    quitar() {
+        this.setState({
+            cantidad: this.state.cantidad - 1
+        })
+    }
+
+    limpiar() {
+        this.setState({
+            cantidad: 0
+        })
+    }
 
     render() {
         return (
@@ -16,17 +44,13 @@ class FruitTarjet extends React.Component {
                 <h3>{this.props.name}</h3>
                 <hr/>
                 <div>cantidad: {this.state.cantidad}</div>
-                <button onClick={() => {
-                this.setState({cantidad: this.state.cantidad + 1})
-                }}
-                >
-                    Agregar
-                </button>
+                <button onClick={this.agregar}> +</button>
+                <button onClick={this.quitar}> -</button>
+                <button onClick={this.limpiar}> Limpiar</button>
                 <p>$ {this.props.price}</p>
             </div>
         );
     }
-
 }
 
 const App = () => (
@@ -37,4 +61,4 @@ const App = () => (
     </div>
 )
 
-ReactDom.render(<App/>, document.getElementById('root'))
+ReactDOM.render(<App/>, document.getElementById('root'))
