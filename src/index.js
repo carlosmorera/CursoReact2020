@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from 'react-dom'
+//import './FruitCard.css'
+import styles from './FruitCard.module.css'
 
-class FruitTarjet extends React.Component {
+class FruitCard extends React.Component {
 
     state = {
         cantidad: 0
@@ -24,18 +26,10 @@ class FruitTarjet extends React.Component {
 
     render() {
         const hasItems = this.state.cantidad > 0
-        const styles ={
-            border: '1px solid black',
-            marginBottom: '1em',
-            borderRadius: '0.5em',
-            padding: '1em',
-            background: hasItems ? 'linear-gradient(45deg, black, #4a02f7)' : '#FFF',
-            color: hasItems ? '#FFF' : '#000',
-            transition: 'all 400ms ease-out'
-
-        }
+        const acyiveClass = hasItems ? styles['card-active'] :''
+        const clases = styles.card + ' ' + acyiveClass
         return (
-            <div style={styles}>
+            <div className={clases}>
                 <h3>{this.props.name}</h3>
                 <div>cantidad: {this.state.cantidad}</div>
                 <button onClick={this.agregar}> +</button>
@@ -53,9 +47,9 @@ class FruitTarjet extends React.Component {
 
 const App = () => (
     <div>
-        <FruitTarjet name={'Apple'} price={2.00}/>
-        <FruitTarjet name='Orange' price={3.00}/>
-        <FruitTarjet name='Kiwi'/>
+        <FruitCard name={'Apple'} price={2.00}/>
+        <FruitCard name='Orange' price={3.00}/>
+        <FruitCard name='Kiwi'/>
     </div>
 )
 
