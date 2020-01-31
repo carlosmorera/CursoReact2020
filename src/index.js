@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FruitCard from './componentes/index';
+import App from './App';
 
-ReactDOM.render(<FruitCard />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
