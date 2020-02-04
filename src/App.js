@@ -1,42 +1,41 @@
 import React, {Component} from "react";
 
-class Contador extends Component {
+const Gato = (props) => (
+    <div>
+        <h1>
+            Gato 🐈🐈🐈🐈🐈🐈🐈🐅🐱
+        </h1>
+        <pre>
+            {JSON.stringify(props, null, 4)}
+        </pre>
+    </div>
+)
 
+class App extends Component {
     state = {
-        video:{
-            tittle: 'Super Video',
-             likes: 0
-        }
-    }
-
-    add = () => {
-        this.setState((state) => ({
-            video: {
-                ...this.state.video,
-                likes: this.state.video.likes + 1
-            }
-        }))
+        force: 100,
+        life: 6,
+        age: '1 year'
     }
 
     render() {
+        const otherData = {
+            race: 'wild',
+            nightFights: 10
+        }
+
         return (
             <div>
-                <h1>
-                    {this.state.video.tittle}
-                </h1>
-                <button onClick={this.add}>
-                    Likes ({this.state.video.likes})
-                </button>
+                <Gato
+                    name='Felix'
+                    age='2 years'
+                    {...otherData}
+                    {...this.state}
+                />
             </div>
 
         )
     }
 }
-
-const App = () => (
-    <div>
-        <Contador/>
-    </div>
-)
 
 export default App
