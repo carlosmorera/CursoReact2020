@@ -1,37 +1,38 @@
 import React, {Component} from "react";
 
-const Gato = (props) => (
-    <div>
-        <h1>
-            Gato 🐈🐈🐈🐈🐈🐈🐈🐅🐱
-        </h1>
-        <pre>
-            {JSON.stringify(props, null, 4)}
-        </pre>
-    </div>
-)
+const styles = {
+    height: '200px',
+    background: 'gold',
+    padding: '1em',
+    boxSizing: 'border-box'
+
+}
 
 class App extends Component {
+
     state = {
-        force: 100,
-        life: 6,
-        age: '1 year'
+        x: 0,
+        y: 0
+    }
+
+    manejador = (event) => {
+        this.setState({
+            x: event.clientX,
+            y: event.clientY
+        })
     }
 
     render() {
-        const otherData = {
-            race: 'wild',
-            nightFights: 10
-        }
-
         return (
-            <div>
-                <Gato
-                    name='Felix'
-                    age='2 years'
-                    {...otherData}
-                    {...this.state}
-                />
+            <div
+                style={styles}
+                onMouseMove={this.manejador}>
+                <div>
+                    x: {this.state.x}
+                </div>
+                <div>
+                    y: {this.state.y}
+                </div>
             </div>
 
         )
