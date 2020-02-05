@@ -1,50 +1,43 @@
 import React, {Component} from "react";
 
-class App extends Component {
+class PersistenciaEventos extends Component {
 
     state = {
-        text: '',
-        evento: ''
+        color: 'blue'
     }
-
-    manejador = (event) => {
+    handlerChange = (e) => {
+        const color = e.target.value
         this.setState({
-            text: event.target.value,
-            evento: event.type
+            color
         })
-    }
 
-    manejadorSegundario = (e) => {
-        e.preventDefault()
     }
 
     render() {
         return (
+
             <div>
                 <input
                     type="text"
-                    onChange={this.manejador}
-                    onCopy={this.manejador}
-                    onPaste={this.manejador}
+                    onChange={this.handlerChange}
                 />
-                <h1>
-                    Estado del texto: {this.state.text}
-                </h1>
-                <h2>
-                    Tipo de evento: {this.state.evento}
-                </h2>
+                <h1
+                    style={{
+                        color: this.state.color
 
-                <a
-                    href="https://www.google.com/"
-                    onClick={this.manejadorSegundario}
-                    // onclick="return false"
+                    }}
                 >
-                    Google
-                    </a>
+                    {this.state.color}
+                </h1>
             </div>
-
-    )
+        );
     }
-    }
+}
 
-    export default App
+const App = () => (
+    <div>
+        <PersistenciaEventos/>
+    </div>
+)
+
+export default App
