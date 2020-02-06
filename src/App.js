@@ -1,21 +1,39 @@
-import React from "react";
+import React, {Component} from "react";
 
-const Saludo = (props) => {
-    if (props.saluda) {
-        return (
-            <h1>Hola mundo!</h1>
-        )
+const Title = (props) => {
+    const styles = {
+        padding: '0.3em',
+        color: '#FFF',
+        background: props.uiColor,
+        borderRadius: '0.3em',
+        textAlign: 'center',
+        fontSize: '50px'
+    }
+    console.log(props.children)
+    return (
+        <h1 style={styles}>
+            {props.children}
+        </h1>
+    )
+}
+
+class App extends Component {
+    state = {
+        uiColor: 'purple'
     }
 
-    return (<p>Nada!</p>
-    )
-
+    render() {
+        return (
+            <div>
+                <Title
+                    uiColor={this.state.uiColor}
+                >
+                    Hola <em>Mundo! :D</em>
+                </Title>
+            </div>
+        )
+    }
 }
 
 
-const App = () => (
-    <div>
-        <Saludo saluda/>
-    </div>
-)
 export default App
