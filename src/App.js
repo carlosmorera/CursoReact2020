@@ -1,18 +1,18 @@
 import React, {Component} from "react";
 
-const Title = (props) => {
+const Title = ({uiColor, children}) => {
     const styles = {
         padding: '0.3em',
         color: '#FFF',
-        background: props.uiColor,
+        background: uiColor,
         borderRadius: '0.3em',
         textAlign: 'center',
         fontSize: '50px'
     }
-    console.log(props.children)
+    console.log(children)
     return (
         <h1 style={styles}>
-            {props.children}
+            {children}
         </h1>
     )
 }
@@ -23,10 +23,11 @@ class App extends Component {
     }
 
     render() {
+        const {uiColor} = this.state
         return (
             <div>
                 <Title
-                    uiColor={this.state.uiColor}
+                    uiColor={uiColor}
                 >
                     Hola <em>Mundo! :D</em>
                 </Title>
