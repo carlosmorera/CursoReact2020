@@ -1,71 +1,54 @@
 import React, {Component} from "react";
-import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
-class PortalModal extends Component {
-    render() {
-        if (this.props.visible) {
-            return null
-        }
+//Para instalar propTypes --> npm i prop-types
+/* En una furncion arrow se definen fera de la funcion
+const Profile = () => ()
+Profile.propTypes = {}*/
 
-        const styles = {
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            background: 'linear-gradient(to top right, #667eea, #764ba2)',
-            opacity: '095',
-            color: '#FFF'
-        }
-        return ReactDOM.createPortal((
-            <div style={styles}>
-                {this.props.children}
-            </div>
-        ), document.getElementById('modal-root'))
-    }
-}
+class Profile extends Component {
 
-class App extends Component {
-    state = {
-        visible: false,
-        num: 0
-    }
-
-    componentDidMount() {
-        setInterval(() => {
-            this.setState(state => ({
-                num: state.num + 1
-            }))
-        }, 1000)
-    }
-
-    mostrar = () => {
-        this.setState({visible: false})
-    }
-    cerrar = () => {
-        this.setState({visible: true})
+    //De esta forma se definen ls propTypes dentro de la clase
+    static propTypes = {
+        name: PropTypes.string,
+        bio: PropTypes.string,
+        email: PropTypes.string,
+        age: PropTypes.number
     }
 
     render() {
+        const {name, bio, email, age} = this.props
         return (
             <div>
-                <button
-                    onClick={this.mostrar}>
-                    Mostrar
-                </button>
-                <PortalModal visible={this.state.visible}>
-                    <button
-                        onClick={this.cerrar}>
-                        Cerrar
-                    </button>
-                    <h1>
-                        Hola desde un portal Modal {this.state.num}
-                    </h1>
-                </PortalModal>
+                <h1>{name}</h1>
+                <p>
+                    {bio}
+                </p>
+                <a href={`mailto:{email}`}>
+                    {email}
+                </a>
+                <p>{age}</p>
             </div>
         )
     }
 }
 
+/* De esta forma se pueden definir las propTypes fuera de la clase
+Profile.propTypes = {}*/
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <Profile
+                    name='Carlos'
+                    bio=' Soy desarrollador'
+                    email='mail@mail.com'
+                    age={46}
+                />
+            </div>
+        )
+    }
+}
 
 export default App
