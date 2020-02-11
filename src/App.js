@@ -1,39 +1,50 @@
 import React, {Component} from "react";
-import {renderIntoDocument} from "react-dom/test-utils";
 
-class App extends Component {
 
-    state = {
-        fruits: [
-            {name: 'Pera', price: 10},
-            {name: 'Manzana', price: 15},
-            {name: 'Lulo', price: 30}
-        ],
-        frutaSeleccionada: {}
+class Entrada extends Component {
+
+    entrada = React.createRef()
+
+    componentDidMount() {
+        this.focus()
     }
-    select = (frutaSeleccionada, event) => {
-        this.setState({
-            frutaSeleccionada
-        })
+
+    focus = () => {
+        this.entrada.current.focus()
+    }
+    blur = () => {
+        this.entrada.current.blur()
     }
 
     render() {
         return (
-            <ul>
-                {this.state.fruits.map((fruit) => (
-                    <li
-                        key={fruit.name}
-                        onClick={this.select.bind(this, fruit)}
-                        style={{
-                            color: this.state.frutaSeleccionada.name === fruit.name
-                                ? 'red'
-                                : '#000'
-                        }}
-                    >
-                        {fruit.name} - {fruit.price}
-                    </li>
-                ))}
-            </ul>
+            <div>
+                <input
+                    type="text"
+                    ref={this.entrada}
+                />
+                <button
+                    onClick={this.focus}
+                >
+                    Focus
+                </button>
+                <button
+                    onClick={this.blur}>
+                    Blur
+                </button>
+            </div>
+        )
+    }
+}
+
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <h1>React refs</h1>
+                <Entrada></Entrada>
+            </div>
         )
     }
 }
