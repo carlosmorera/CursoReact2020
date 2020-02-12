@@ -12,24 +12,22 @@ class InputControlado extends Component {
         const text = event.target.value
         let color = 'green'
 
-        if(text.trim() === ''){
-            color= '#E8E8E8'
+        if (text.trim() === '') {
+            color = '#E8E8E8'
         }
-        if(text.trim() !== '' && text.length < 5){
-            color= 'red'
+        if (text.trim() !== '' && text.length < 5) {
+            color = 'red'
         }
         this.setState({text, color})
-    }
 
+        this.props.onChange(this.props.name, text)
+    }
     render() {
         const styles = {
             border: `1px solid ${this.state.color}`,
             padding: '0.3em 0.6em',
-            outline
-    :
-        'none'
-    }
-
+            outline: 'none'
+        }
         return (
             <form onSubmit={this.handleSubmit}>
                 <input
@@ -37,6 +35,7 @@ class InputControlado extends Component {
                     value={this.state.text}
                     onChange={this.actualizar}
                     style={styles}
+                    placeholder={this.props.placeholder}
                 />
             </form>
         )
@@ -45,8 +44,15 @@ class InputControlado extends Component {
 }
 
 class App extends Component {
-    send = (data) => {
-        console.log(data)
+
+    state = {
+        name: '',
+        email: ''
+    }
+    actualizar = (name, text) => {
+        this.setState({
+            [name]: text
+        })
     }
 
     render() {
@@ -54,10 +60,23 @@ class App extends Component {
             <div>
                 <h1>Inputs controlados</h1>
                 <InputControlado
+                    onChange={this.actualizar}
+                    name='name'
+                    placeholder='Nombre'
                 />
+                <InputControlado
+                    onChange={this.actualizar}
+                    name='email'
+                    placeholder='Email'
+                />
+                <h2>
+                    Nombre: {this.state.name}
+                </h2>
+                <h2>
+                    Nombre: {this.state.email}
+                </h2>
             </div>
         )
     }
 }
-
 export default App
