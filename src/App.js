@@ -1,29 +1,43 @@
 import React, {Component} from "react";
 
-//Con los input no controlados no podermos controlar los cambios de la informacion
+//Con los input  controlados  podermos controlar los cambios de la informacion en tiempo real
 
-class InputNoControlado extends Component {
-    handleSubmit = (event) => {
-        event.preventDefault()
-        const nombre = event.target[0].value
-        const email = event.target[1].value
-        this.props.onSend({nombre, email})
+class InputControlado extends Component {
+    state = {
+        text: '',
+        color: '#E8E8E8'
+    }
+    actualizar = (event) => {
+
+        const text = event.target.value
+        let color = 'green'
+
+        if(text.trim() === ''){
+            color= '#E8E8E8'
+        }
+        if(text.trim() !== '' && text.length < 5){
+            color= 'red'
+        }
+        this.setState({text, color})
     }
 
     render() {
+        const styles = {
+            border: `1px solid ${this.state.color}`,
+            padding: '0.3em 0.6em',
+            outline
+    :
+        'none'
+    }
+
         return (
             <form onSubmit={this.handleSubmit}>
                 <input
                     type="text"
-                    placeholder='Nombre'
+                    value={this.state.text}
+                    onChange={this.actualizar}
+                    style={styles}
                 />
-                <input
-                    type="text"
-                    placeholder='Email'
-                />
-                <button>
-                    Enviar
-                </button>
             </form>
         )
     }
@@ -38,9 +52,8 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>Inputs no controlados Formularios</h1>
-                <InputNoControlado
-                onSend ={this.send}
+                <h1>Inputs controlados</h1>
+                <InputControlado
                 />
             </div>
         )
