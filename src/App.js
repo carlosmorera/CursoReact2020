@@ -2,45 +2,33 @@ import React, {Component} from "react";
 
 class App extends Component {
     state = {
-        techs: ['Vue']
+        active: true
     }
     handleChange = (event) => {
-        const techs = Array.from(
-            event.target.selectedOptions,
-            (option) => option.value
-        )
-        console.log(techs)
+
         this.setState({
-            techs
+            active: event.target.checked
         })
     }
 
     render() {
+        const {active} = this.state
         return (
             <div>
-                <h1>
-                    Etiqueta Select
-                </h1>
-
                 <form>
-                    <select
-                        value={this.state.techs}
+                    <input
+                        type="checkbox"
+                        checked={active}
                         onChange={this.handleChange}
-                        multiple
-                    >
-                        <option value="Angular">Angular</option>
-                        <option value="React">React</option>
-                        <option value="Vue">Vue</option>
-                        <option value="Vanilla">Vanilla</option>
-                    </select>
+                    />
                 </form>
+                {active && (
+                    <h1>
+                        Etiqueta checkbox
+                    </h1>
+                )}
 
-                <ul>
-                    {this.state.techs.map(tech =>
-                        <li key={tech}>
-                            {tech}
-                        </li>)}
-                </ul>
+
             </div>
         )
     }
