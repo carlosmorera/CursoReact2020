@@ -13,14 +13,24 @@ class InputNoControlado extends Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input
-                    type="text"
-                    placeholder='Nombre'
-                />
-                <input
-                    type="text"
-                    placeholder='Email'
-                />
+
+                <p>
+                    <label htmlFor='name'>Nombre: </label>
+                    <input
+                        type="text"
+                        placeholder='Nombre'
+                        id='name'
+                    />
+                </p>
+                <p>
+                    <label htmlFor='email'>Email: </label>
+                    <input
+                        type="text"
+                        placeholder='Email'
+                        id='email'
+                    />
+                </p>
+
                 <button>
                     Enviar
                 </button>
@@ -40,7 +50,7 @@ class App extends Component {
             <div>
                 <h1>Inputs no controlados Formularios</h1>
                 <InputNoControlado
-                onSend ={this.send}
+                    onSend={this.send}
                 />
             </div>
         )
