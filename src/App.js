@@ -1,74 +1,40 @@
 import React, {Component} from "react";
 
-class Botton extends Component {
-    state = {
-        dispatchError: false
-    }
-    dispatchError = () => {
-        this.setState({
-            dispatchError: true
-        })
-    }
-
-    render() {
-        if (this.state.dispatchError) {
-            throw new Error('Esto es un mensaje de fallo')
-        }
-        return (
-            <button
-                onClick={this.dispatchError}
-            >
-                Boton con Bug
-            </button>
-        );
-    }
-}
-
-class LimiteErrores extends Component {
-
-    state = {
-        tieneError: false
-    }
-
-    componentDidCatch(error,errorInfo) {
-        this.setState({
-            tieneError: true,
-            error
-        })
-    }
-
-    render() {
-        if (this.state.tieneError) {
-            return (
-                <div>
-                    Wops! Algo salio mal!
-                    <div
-                        style={{
-                            color: 'orangered'
-                        }}
-                    >
-                        {this.state.error && this.state.error.toString()}
-
-                    </div>
-                </div>)
-        }
-        return this.props.children
-    }
-}
-
 class App extends Component {
+
+    state = {
+        users: [],
+        cargando: true
+    }
+
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(res => res.json())
+            .then(users => this.setState({users, cargando: false}))
+            .catch(error => {
+                // Manejo del error
+            })
+
+    }
+
     render() {
+        if(this.state.cargado){
+            return <h1>Cargando...</h1>
+        }
         return (
             <div>
-                <LimiteErrores>
-                    <Botton/>
-                </LimiteErrores>
-                <LimiteErrores>
-                    <Botton/>
-                </LimiteErrores>
-                <LimiteErrores>
-                    <Botton/>
-                </LimiteErrores>
+                <h1>Peticion HTTP</h1>
+                <ul>{this.state.users.map(user=>
+                    (
+                        <li
+                        key={user.id}
+                        >
+                            {user.name}
+                            <a href={`http:///user.website`}>
+                                Website
+                            </a>
+                        </li>
+                    ))}</ul>
             </div>
         )
     }
