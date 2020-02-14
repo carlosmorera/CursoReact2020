@@ -1,34 +1,74 @@
 import React, {Component} from "react";
 
-class App extends Component {
+class Botton extends Component {
     state = {
-        active: true
+        dispatchError: false
     }
-    handleChange = (event) => {
-
+    dispatchError = () => {
         this.setState({
-            active: event.target.checked
+            dispatchError: true
         })
     }
 
     render() {
-        const {active} = this.state
+        if (this.state.dispatchError) {
+            throw new Error('Esto es un mensaje de fallo')
+        }
+        return (
+            <button
+                onClick={this.dispatchError}
+            >
+                Boton con Bug
+            </button>
+        );
+    }
+}
+
+class LimiteErrores extends Component {
+
+    state = {
+        tieneError: false
+    }
+
+    componentDidCatch(error,errorInfo) {
+        this.setState({
+            tieneError: true,
+            error
+        })
+    }
+
+    render() {
+        if (this.state.tieneError) {
+            return (
+                <div>
+                    Wops! Algo salio mal!
+                    <div
+                        style={{
+                            color: 'orangered'
+                        }}
+                    >
+                        {this.state.error && this.state.error.toString()}
+
+                    </div>
+                </div>)
+        }
+        return this.props.children
+    }
+}
+
+class App extends Component {
+    render() {
         return (
             <div>
-                <form>
-                    <input
-                        type="checkbox"
-                        checked={active}
-                        onChange={this.handleChange}
-                    />
-                </form>
-                {active && (
-                    <h1>
-                        Etiqueta checkbox
-                    </h1>
-                )}
-
-
+                <LimiteErrores>
+                    <Botton/>
+                </LimiteErrores>
+                <LimiteErrores>
+                    <Botton/>
+                </LimiteErrores>
+                <LimiteErrores>
+                    <Botton/>
+                </LimiteErrores>
             </div>
         )
     }
