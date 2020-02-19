@@ -1,75 +1,45 @@
 import React, {Component} from "react";
 
-class App extends Component {
+class Contador extends Component {
+    // Esta es la forma adecauada de usar el constructor del componente
+    /*    constructor(props) {
+        super(props);
+        this.agregar = this.agregar.bind(this)
+        this.
+        }
+    }*/
     state = {
-        movie: {},
-        cargando: false
+        num: this.props.num
     }
-
-    handleSubmit = async (event) => {
-        event.preventDefault()
-        this.setState({cargando: true})
-
-        const title = event.target[0].value
-        const url = 'http://www.omdbapi.com/?i=tt3896198&apikey=f36d2e4f'
-
-        /*fetch(url + '&t=' + title)
-            .then(res => res.json())
-            .then(movie => this.setState({movie, cargando: false}))*/
-
-
-        //Esta forma es con Axios
-        /*const res = await axios.get(url,{
-            params:{
-                t:title
-            }
-        })
-        const res = await axios.get(url,{
-            params:{
-                t:title
-            }
-        })*/
-
-        const res = await fetch(url+ '&t=' + title)
-        const json = await res.json()
-
-        this.setState({
-            movie: json,
-            cargando: false
-        })
-
-
+    agregar = () => {
+        this.setState(state => ({
+            num: state.num + 1
+        }))
     }
-
     render() {
-        const {movie, cargando} = this.state
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Nombre de la pelicula"
-                    />
-                    <button>
-                        Buscar
-                    </button>
-                </form>
-                {cargando &&
-                <h1>Cargando...</h1>
-                }
-                {movie.Title && !cargando &&
-                <div>
-                    <h1>{movie.Title}</h1>
-                    <p>{movie.Plot}</p>
-                    <img
-                        src={movie.Poster}
-                        alt='Poster'
-                        style={{
-                            width: '150px'
-                        }}
-                    />
+                <button
+                    onClick={this.agregar}
+                >
+                    click({this.state.num})
+                </button>
+            </div>
+        )
+    }
+}
 
-                </div>}
+class App extends Component {
+
+    render() {
+        return (
+            <div>
+                <h1>Metodo constructor</h1>
+                <Contador
+                    num={100}
+                /> <Contador
+                num={10}
+            />
             </div>
         )
     }
