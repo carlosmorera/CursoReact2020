@@ -1,71 +1,75 @@
 import React, {Component} from "react";
-import {render} from "react-dom";
 
-class Http extends Component {
+class DetailUser extends Component {
     state = {
-        photos: []
+        user: {},
+        loading: false
     }
 
     componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/photos')
-            .then(res => res.json())
-            .then(photos => this.setState({photos}))
+        this.newSearch()
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.userId !== this.props.userId)
+        this.newSearch()
+
+    }
+
+    newSearch = () => {
+
+        this.setState({
+            loading: true
+        })
+
+        const URL = 'https://jsonplaceholder.typicode.com/users/' + this.props.userId
+        fetch(URL)
+            .then(res => res.json())
+            .then(user => this.setState({
+                user,
+                loading: false
+            }))
+    }
+
+
     render() {
-        const {photos} = this.state
+        const {user, loading} = this.state
         return (
             <div>
-                {photos.map(photo => (
-                    <img
-                        key={photo.id}
-                        src={photo.thumbnailUrl}
-                        alt={photo.title}
-                    />
-
-                ))}
+                <h2>User Details</h2>
+                {loading
+                    ? (<h2>Cargando</h2>)
+                    : (<pre>{JSON.stringify(user, null, 4)}</pre>)
+                }
             </div>
         )
     }
 }
 
-class Events extends Component {
-
+class App extends Component {
     state = {
-        width: window.innerWidth
+        id: 1
     }
-
-    componentDidMount() {
-        window.addEventListener('resize', this.handlerResize)
-    }
-
-    handlerResize = () => {
+    add = () => {
         this.setState({
-            width: window.innerWidth
+            id: this.state.id + 1
         })
     }
 
     render() {
+        const {id} = this.state
         return (
             <div>
-                <h2>Events {this.state.width}</h2>
-            </div>
-        )
-    }
-}
 
-
-class App extends Component {
-    componentDidMount() {
-        //Es usado para hacer solicitudes HTTP
-        //Tambien para agregar Event Listeners
-    }
-
-    render() {
-        return (
-            <div>
-                <h1>componentDidMount</h1>
-                <Events/>
+                <h1>componentDidUpdate</h1>
+                <h2>Id :{id}</h2>
+                <button
+                    onClick={this.add}
+                >
+                    click
+                </button>
+                <DetailUser
+                    userId={id}/>
             </div>
         )
     }
