@@ -1,40 +1,50 @@
 import React, {Component} from "react";
 
 class App extends Component {
-
     state = {
-        users: [],
-        cargando: true
+        movie: {},
+        cargando: false
     }
 
-    componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/users')
+    handleSubmit = (event) => {
+        event.preventDefault()
+        const title = event.target[0].value
+        const url = 'http://www.omdbapi.com/?i=tt3896198&apikey=f36d2e4f'
+        this.setState({cargando:true})
+        fetch(url + '&t=' + title)
             .then(res => res.json())
-            .then(users => this.setState({users, cargando: false}))
-            .catch(error => {
-                // Manejo del error
-            })
-
+            .then(movie => this.setState({movie, cargando: false}))
     }
 
     render() {
-        if(this.state.cargado){
-            return <h1>Cargando...</h1>
-        }
+        const {movie,cargando} = this.state
         return (
             <div>
-                <h1>Peticion HTTP</h1>
-                <ul>{this.state.users.map(user=>
-                    (
-                        <li
-                        key={user.id}
-                        >
-                            {user.name}
-                            <a href={`http:///user.website`}>
-                                Website
-                            </a>
-                        </li>
-                    ))}</ul>
+                <form onSubmit={this.handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Nombre de la pelicula"
+                    />
+                    <button>
+                        Buscar
+                    </button>
+                </form>
+                {cargando &&
+                <h1>Cargando...</h1>
+                }
+                {movie.Title && !cargando &&
+                <div>
+                    <h1>{movie.Title}</h1>
+                    <p>{movie.Plot}</p>
+                    <img
+                        src={movie.Poster}
+                        alt='Poster'
+                        style={{
+                            width: '150px'
+                        }}
+                    />
+
+                </div>}
             </div>
         )
     }
