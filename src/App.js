@@ -11,8 +11,8 @@ class DetailUser extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.userId !== this.props.userId)
-        this.newSearch()
+        if (prevProps.userId !== this.props.userId)
+            this.newSearch()
 
     }
 
