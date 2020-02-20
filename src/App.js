@@ -1,45 +1,77 @@
 import React, {Component} from "react";
+import faker from 'faker'
 
-class DetailUser extends Component {
-    state = {
-        user: {},
-        loading: false
-    }
 
-    componentDidMount() {
-        this.newSearch()
+const chatSyle = {
+    width: 230,
+    height: 300,
+    border: '1px solid gray',
+    overflow: 'auto',
+    fontFamily: 'monospace'
+
+}
+const messageStyle = {
+    padding: '1em',
+    borderBottom: '1px solid #DDD'
+}
+const avatarStyle = {
+    width: 50,
+    height: 50,
+    borderRadius: '50%'
+}
+
+class Chat extends Component {
+    box = React.createRef()
+
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+         const box = this.box.current
+
+        if (box.scrollTop + box.offsetHeight >= box.scrollHeight) {
+
+           return true
+
+        }
+
+        return false
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.userId !== this.props.userId)
-            this.newSearch()
+        const box = this.box.current
+
+        if (snapshot) {
+
+            box.scrollTop = box.scrollHeight
+
+        }
 
     }
-
-    newSearch = () => {
-
-        this.setState({
-            loading: true
-        })
-
-        const URL = 'https://jsonplaceholder.typicode.com/users/' + this.props.userId
-        fetch(URL)
-            .then(res => res.json())
-            .then(user => this.setState({
-                user,
-                loading: false
-            }))
-    }
-
 
     render() {
-        const {user, loading} = this.state
         return (
-            <div>
-                <h2>User Details</h2>
-                {loading
-                    ? (<h2>Cargando</h2>)
-                    : (<pre>{JSON.stringify(user, null, 4)}</pre>)
+            <div
+                style={chatSyle}
+                ref={this.box}
+            >
+                {
+                    this.props.list.map(element => (
+                        <div
+                            key={element.id}
+                            style={messageStyle}
+                        >
+                            <p>
+                                {element.message}
+                            </p>
+                            <div>
+                                {element.name}
+                            </div>
+                            <img
+                                src={element.avatar}
+                                alt='Avatar'
+                                style={avatarStyle}
+                            />
+
+                        </div>
+                    ))
                 }
             </div>
         )
@@ -47,29 +79,37 @@ class DetailUser extends Component {
 }
 
 class App extends Component {
+
     state = {
-        id: 1
+        list: []
     }
-    add = () => {
-        this.setState({
-            id: this.state.id + 1
-        })
+
+    addMessage = () => {
+        //se crea el mensaje falso
+        const message = {
+            id: faker.random.uuid(),
+            name: faker.name.findName(),
+            avatar: faker.image.avatar(),
+            message: faker.hacker.phrase()
+        }
+        console.log(message)
+        this.setState(state => ({
+            list: [...state.list, message]
+        }))
     }
 
     render() {
-        const {id} = this.state
         return (
             <div>
-
-                <h1>componentDidUpdate</h1>
-                <h2>Id :{id}</h2>
+                <h1>getSnapshotBeforeUpdate</h1>
+                <Chat
+                    list={this.state.list}
+                />
                 <button
-                    onClick={this.add}
+                    onClick={this.addMessage}
                 >
-                    click
+                    New Message
                 </button>
-                <DetailUser
-                    userId={id}/>
             </div>
         )
     }
