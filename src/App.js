@@ -1,77 +1,94 @@
-import React, {Component} from "react";
+import React, {Component, PureComponent} from "react";
 
-class Contador extends Component {
-    state = {
-        num: this.props.num
+const taskStyle = {
+    padding: '1em',
+    borderBottom: '1px solid #CCC',
+    marginTop: '0.4em'
+}
+//PureComponent valida las prosp que recive para mirar si se rendereiza o no
+class Task extends PureComponent {
+
+    deleteTask = () => {
+        this.props.onRemove(this.props.task)
     }
 
-    //componentWillReceiveProps(
-    static getDerivedStateFromProps(nextProps, prevState) {
-        /* return {
-             num: 800
-         }*/
-        /*if (prevState.num !== nextProps.num)
-                     return {
-                         num: nextProps.num
-                     }*/
 
-        if (prevState.num < nextProps.num)
-            return {
-                num: nextProps.num
-            }
+    //EL metodo  shouldComponentUpdate se usa cuando no es PureComponent
+   /* shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextProps.task.id !== this.props.task.id
     }
-
-    add = () => {
-        this.setState(state => ({
-            num: state.num + 1
-        }))
-    }
-
+*/
     render() {
-        const {num} = this.state
+        const {task} = this.props
         return (
-            <div>
+            <div
+                style={taskStyle}
+            >
                 <button
-                    onClick={this.add}
+                    onClick={this.deleteTask}
                 >
-                    Clicks ({num})
+                    X
                 </button>
+                <span>
+                {task.text}
+                </span>
             </div>
         )
     }
-
 }
+
 
 class App extends Component {
 
     state = {
-        num: 0
+        list: []
     }
 
-    handleChange = (e) => {
-        let numero = parseInt(e.target.value)
-        if (isNaN(numero)) {
-            numero = 0
-        }
+    agregar = (e) => {
+        e.preventDefault()
+        const text = e.target[0].value
+        const id = Math.random().toString(16)
+        const task = {text, id}
+        this.setState(state => ({
+            list: [
+                ...state.list,
+                task]
+        }))
+        e.target[0].value = ''
+    }
 
-        this.setState({
-            num: numero
-        })
+    delete = (taskDelete) => {
+       this.setState(state =>({
+           list: state.list.filter(task =>{
+               return task.id !== taskDelete.id
+           })
+       }))
     }
 
     render() {
-        const {num} = this.state
         return (
             <div>
-                <h1>getDeliveryStateFromProps</h1>
-                <h2>{num}</h2>
-                <input
-                    type="text"
-                    onChange={this.handleChange}
-                />
-                <Contador
-                    num={num}
-                />
+                <h3>shouldComponentUpdate</h3>
+                <form
+                    onSubmit={this.agregar}
+                >
+                    <input
+                        type="text"
+                        placeholder='Tarea'
+                    />
+                    <button>
+                        Agregar
+                    </button>
+                </form>
+                <div>
+                    {this.state.list.map(element => (
+                        <Task
+                            key={element.id}
+                            task={element}
+                            onRemove={this.delete}
+                        />
+                    ))}
+                </div>
             </div>
         )
     }
