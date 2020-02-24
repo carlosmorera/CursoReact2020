@@ -1,94 +1,96 @@
-import React, {Component, PureComponent} from "react";
+import React, {Component} from "react";
 
-const taskStyle = {
-    padding: '1em',
-    borderBottom: '1px solid #CCC',
-    marginTop: '0.4em'
-}
-//PureComponent valida las prosp que recive para mirar si se rendereiza o no
-class Task extends PureComponent {
+class Timer extends Component {
 
-    deleteTask = () => {
-        this.props.onRemove(this.props.task)
+    state = {
+        time: 0,
+        isPlaying: true
     }
 
+    tick = null
 
-    //EL metodo  shouldComponentUpdate se usa cuando no es PureComponent
-   /* shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextProps.task.id !== this.props.task.id
+    componentDidMount() {
+        this.play()
     }
-*/
+
+    componentWillUnmount() {
+        /*
+        * Limpiar Intervals
+        * Limpiar Event Listeners
+        * Ejecutar algun metodo para que limpie algo del padre
+        */
+        this.props.onDestroy()
+        clearInterval(this.tick)
+    }
+
+    play = () => {
+        this.setState({isPlaying: true})
+        this.tick = setInterval(() => {
+            this.setState(state => ({
+                time: state.time + 1
+            }))
+        }, 1000)
+    }
+
+    pause = () => {
+        this.setState({isPlaying: false})
+        clearInterval(this.tick)
+    }
+
+    toggle = () => {
+        this.state.isPlaying
+            ? this.pause()
+            : this.play()
+    }
+
     render() {
-        const {task} = this.props
+        const {time, isPlaying} = this.state
+
         return (
-            <div
-                style={taskStyle}
-            >
-                <button
-                    onClick={this.deleteTask}
-                >
-                    X
+            <div>
+                <h1>{time}</h1>
+                <button onClick={this.toggle}>
+                    {
+                        isPlaying
+                            ? 'Pause'
+                            : 'Play'
+                    }
                 </button>
-                <span>
-                {task.text}
-                </span>
             </div>
         )
     }
 }
 
-
 class App extends Component {
-
     state = {
-        list: []
+        show: true,
+        message: ' '
     }
 
-    agregar = (e) => {
-        e.preventDefault()
-        const text = e.target[0].value
-        const id = Math.random().toString(16)
-        const task = {text, id}
-        this.setState(state => ({
-            list: [
-                ...state.list,
-                task]
-        }))
-        e.target[0].value = ''
+    desmontar = () => {
+        this.setState({
+            show: false
+        })
     }
-
-    delete = (taskDelete) => {
-       this.setState(state =>({
-           list: state.list.filter(task =>{
-               return task.id !== taskDelete.id
-           })
-       }))
+    handleDestroy = () => {
+        this.setState({
+            message: 'EL componente Contador fue destruido.'
+        })
     }
 
     render() {
+        const {message} = this.state
         return (
             <div>
-                <h3>shouldComponentUpdate</h3>
-                <form
-                    onSubmit={this.agregar}
-                >
-                    <input
-                        type="text"
-                        placeholder='Tarea'
-                    />
-                    <button>
-                        Agregar
-                    </button>
-                </form>
-                <div>
-                    {this.state.list.map(element => (
-                        <Task
-                            key={element.id}
-                            task={element}
-                            onRemove={this.delete}
-                        />
-                    ))}
-                </div>
+                <h3>{message}</h3>
+                <button onClick={this.desmontar}>
+                    Desmontar
+                </button>
+                {this.state.show &&
+                <Timer
+                    onDestroy={this.handleDestroy}
+                />
+                }
             </div>
         )
     }
