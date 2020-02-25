@@ -1,13 +1,13 @@
 import React, {Component} from "react";
+import PubSub from 'pubsub-js'
 
 const boxStyle = {
     padding: '0.5em',
     margin: '0.5em',
-    border: '1pz solid gray',
+    border: '1px solid gray',
     borderRadius: '0.3em',
     textAlign: 'center'
 }
-
 const blueStyle = {
     ...boxStyle,
     border: '1px solid blue'
@@ -16,35 +16,64 @@ const redStyle = {
     ...boxStyle,
     border: '1px solid red'
 }
+const greenStyle = {
+    ...boxStyle,
+    border: '1px solid green'
+}
 
-
-class ComponetA extends Component {
-
+class Son extends Component {
     render() {
-        const {num} = this.props
         return (
             <div
                 style={blueStyle}>
-                <button
-                    onClick={this.props.onAdd}>
-                    Componete A ({num})
-                </button>
+                <Grandson/>
             </div>
         )
     }
 }
 
-class ComponentB extends Component {
-
+class Grandson extends Component {
     render() {
-        const {num} = this.props
-
         return (
             <div
                 style={redStyle}>
+                <GreatGrandSon/>
+            </div>
+        )
+    }
+}
+
+class GreatGrandSon extends Component {
+
+    state = {
+        message: '*****'
+    }
+
+    componentDidMount() {
+        PubSub.subscribe('eventPadre', (e, data) => {
+            this.setState({
+                message: data.title
+            })
+        })
+    }
+
+    componentWillUnmount() {
+        PubSub.unsubscribe('eventPadre')
+    }
+
+
+    handleCLick = () => {
+        PubSub.publish('eventGreatGrandSon', 'Hola soy el vento del Bis Nieto')
+    }
+
+    render() {
+        return (
+            <div
+                style={greenStyle}>
+                <p>{this.state.message}</p>
                 <button
-                    onClick={this.props.onAdd}>
-                    Componete B ({num})
+                    onClick={this.handleCLick}>
+                    Bis Nieto
                 </button>
             </div>
         )
@@ -53,35 +82,31 @@ class ComponentB extends Component {
 
 class App extends Component {
 
-    state = {
-        countA: 0,
-        countB: 0
-    }
-
-    handleAddA = () => {
-        this.setState({
-            countA: this.state.countA + 1
+    componentDidMount() {
+        PubSub.subscribe('eventGreatGrandSon', (e, data) => {
+            alert(data)
         })
     }
-    handleAddB = () => {
-        this.setState({
-            countB: this.state.countB + 2
+    componentWillUnmount() {
+        PubSub.unsubscribe('eventGreatGrandSon')
+    }
+
+
+    handleClick = () => {
+        PubSub.publish('eventPadre',{
+            title:'Hola vengo desde el componete Principal'
         })
     }
 
     render() {
-        const {countA, countB} = this.state
         return (
-            <div>
-                <ComponetA
-                    num={countA}
-                    onAdd={this.handleAddB}
-                />
-                <ComponentB
-                    num={countB}
-                    onAdd={this.handleAddA}
-                />
-
+            <div
+                style={boxStyle}>
+                <button
+                onClick={this.handleClick}>
+                    Padre
+                </button>
+                <Son/>
             </div>
         )
     }
