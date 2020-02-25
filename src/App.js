@@ -1,25 +1,50 @@
 import React, {Component} from "react";
 
-class Hijo extends Component {
+const boxStyle = {
+    padding: '0.5em',
+    margin: '0.5em',
+    border: '1pz solid gray',
+    borderRadius: '0.3em',
+    textAlign: 'center'
+}
 
-    state = {
-        message: 'Vacio'
-    }
-    dispatchAlert = (e, message = 'Alerta  desde el hjo') => {
-        alert(message)
-        this.setState({message})
-    }
+const blueStyle = {
+    ...boxStyle,
+    border: '1px solid blue'
+}
+const redStyle = {
+    ...boxStyle,
+    border: '1px solid red'
+}
+
+
+class ComponetA extends Component {
 
     render() {
-        const {message} = this.state
+        const {num} = this.props
         return (
-            <div>
-                <h2>{message}</h2>
-
+            <div
+                style={blueStyle}>
                 <button
-                    onClick={this.dispatchAlert}
-                >
-                    Hijo
+                    onClick={this.props.onAdd}>
+                    Componete A ({num})
+                </button>
+            </div>
+        )
+    }
+}
+
+class ComponentB extends Component {
+
+    render() {
+        const {num} = this.props
+
+        return (
+            <div
+                style={redStyle}>
+                <button
+                    onClick={this.props.onAdd}>
+                    Componete B ({num})
                 </button>
             </div>
         )
@@ -28,24 +53,35 @@ class Hijo extends Component {
 
 class App extends Component {
 
-    hijo = React.createRef()
+    state = {
+        countA: 0,
+        countB: 0
+    }
 
-
-    handleClick = () => {
-        this.hijo.current.dispatchAlert(null, 'mensaje desde el componente padre')
+    handleAddA = () => {
+        this.setState({
+            countA: this.state.countA + 1
+        })
+    }
+    handleAddB = () => {
+        this.setState({
+            countB: this.state.countB + 2
+        })
     }
 
     render() {
+        const {countA, countB} = this.state
         return (
             <div>
-                <Hijo
-                    ref={this.hijo}
+                <ComponetA
+                    num={countA}
+                    onAdd={this.handleAddB}
                 />
-                <button
-                    onClick={this.handleClick}
-                >
-                    Padre
-                </button>
+                <ComponentB
+                    num={countB}
+                    onAdd={this.handleAddA}
+                />
+
             </div>
         )
     }
